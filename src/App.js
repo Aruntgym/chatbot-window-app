@@ -5,7 +5,6 @@ import "chart.js/auto";
 
 const App = () => {
   const [sampleData, setSampleData] = useState("");
-  const [show, setShow] = useState(false);
   const [data, setData] = useState({
     barChartData: {
       labels: ["January", "February", "March", "April", "May"],
@@ -45,26 +44,33 @@ const App = () => {
       ],
     },
     tableData: [
-      { name: "John Doe", age: 28, city: "New York" , occupation: "Engineer",},
-      { name: "Jane Doe", age: 22, city: "Los Angeles", occupation: "Engineer", },
-      { name: "Sam Smith", age: 35, city: "Chicago", occupation: "Engineer", },
+      { name: "John Doe", age: 28, city: "New York", occupation: "Engineer" },
+      {
+        name: "Jane Doe",
+        age: 22,
+        city: "Los Angeles",
+        occupation: "Engineer",
+      },
+      { name: "Sam Smith", age: 35, city: "Chicago", occupation: "Engineer" },
     ],
-  },);
+  });
 
   const handleSubmit = (e) => {
     e.preventDefault();
     try {
       const parsedData = JSON.parse(sampleData);
       if (
-        parsedData.barChartData &&
-        parsedData.pieChartData &&
+        parsedData.barChartData ||
+        parsedData.pieChartData ||
         parsedData.tableData
       ) {
-        setData(parsedData);
-        setShow(true);
+        setData((prevData) => ({
+          ...prevData,
+          ...parsedData,
+        }));
       } else {
         alert(
-          "Invalid JSON format. Please ensure it contains barChartData, pieChartData, and tableData."
+          "Invalid JSON format. Please ensure it contains barChartData, pieChartData, or tableData."
         );
       }
     } catch (error) {
@@ -86,10 +92,10 @@ const App = () => {
       columns,
       data: data.tableData,
     });
+
   return (
     <div>
       <h1>Dynamic Charts and Table</h1>
-      {/* <p>{sampleData}</p> */}
 
       <div style={{ width: "50%", margin: "auto" }}>
         <h2>Bar Chart</h2>
